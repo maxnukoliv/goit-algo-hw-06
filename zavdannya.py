@@ -11,12 +11,10 @@ class Name(Field):
     pass
 
 class Phone(Field):
-    def IsNumberValid(self):
-        if self.value.isdigit(): 
-            if self.value.startswith("+38"):
-                return self.value
-            elif not self.value.startswith("+38"):
-                return self.value
+    def __init__(self, value):
+        if len(value) == 10 and value.isdigit():
+            self.value = value
+        else:
             raise ValueError
 
 class Record:
@@ -25,13 +23,12 @@ class Record:
         self.phones = []
 
     def add_phone(self, phone):
-        valid_phone = Phone(phone).IsNumberValid()
-        self.phones.append(Phone(valid_phone))
+        self.phones.append(Phone(phone))
     
     def edit_phone(self, old_phone, new_phone):
         for phone in self.phones:
             if phone.value == old_phone:
-                phone.value = Phone(new_phone).IsNumberValid()
+                phone.value = Phone(new_phone).value
                 return
         raise ValueError
 
